@@ -130,7 +130,7 @@ std::vector<Territory*> Player::toDefend(){
     return territoriesThatCanBeDefended;
 }
 // Returns the list of territory the player do not own, sorted by adjacent territory to non adjacent ones.
-std::vector<Territory*> Player::toAttack(){//same as defending
+std::vector<Territory*> Player::toAttack(){ // Same as defending
     std::vector<Territory*> territoriesThatCanBeAttacked;
     for(auto&& terr: *this->gameMap->getAllTerritories()){
         if(terr.getOwner() != this) {

@@ -240,7 +240,7 @@ void GameEngine::turnOnOffObservers() {
     std::string input;
     // While loops are to keep prompting user in case they enter an invalid input.
     while (1) {
-        std::cout << "Would you like to turn on observers? (Y/N): ";
+        std::cout << "\nWould you like to turn on observers? (Y/N): ";
         std::cin >> input;
         if (input == "y" || input == "Y") {
             while (1) {
@@ -462,12 +462,12 @@ void GameEngine::updateStrategy() {
 
 void GameEngine::mainGameLoop() {
     while(1){
-        if(reinforcementPhase() == 0) {
+        if (reinforcementPhase() == 0) {
             delete phaseObs;
             delete gameStatsObs;
             return;
         }
-        if(issueOrdersPhase() == 0) {
+        if (issueOrdersPhase() == 0) {
             delete phaseObs;
             delete gameStatsObs;
             return;
@@ -527,11 +527,11 @@ void GameEngine::playersHaveMinTerritories() {
 
 int GameEngine::reinforcementPhase() {
     std::cout<<std::endl<<"\nReinforcement Phase...\n"<<std::endl ;
-    //Making sure no one owns all territory
+    // Makes sure no one owns all territory
     if(isPlayerOwningAllContinents()){
         return 0;
     };
-    //Checking if a player should get kicked out.
+    // Checks if a player should get kicked out.
     do {
         playersHaveMinTerritories();
     }while(isThereEmptyPlayers() != -1);
@@ -593,7 +593,6 @@ int GameEngine::executeOrderWithPriority(std::string orderPriority) {
                 std::cout<<"Player "<<player->getPlayerName()<<"  owns all the territories and won. The game ends..."<<std::endl;
                 return 0;
             }
-            player->getPlayerStrategy()->issueOrder();
             playerTurn = player->getPlayerName();
             phaseName = "Execution phase";
             observerType = 0;
@@ -622,34 +621,34 @@ void GameEngine::clearAllNegotiation() {
 
 void GameEngine::executeOrdersPhase() {
     int winner = -1;
-    //Executing deploy order first
+    // Executing deploy order first
     std::cout<<"====================ORDER EXECUTION PHASE ===============\n";
     std::cout<<"\nDeploys first priority:\n";
     winner = executeOrderWithPriority("DeployOrder");
 
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nAdvance second priority:\n";
     winner = executeOrderWithPriority("AdvanceOrder");
     observerType = 1;
     notify();   // Game statistics observer
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nBomb third priority:\n";
     winner =  executeOrderWithPriority("BombOrder");
 
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nAirlift fourth priority:\n";
     winner =  executeOrderWithPriority("AirliftOrder");
 
     observerType = 1;
     notify();   // Game statistics observer
 
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     winner =  executeOrderWithPriority("BlockadeOrder");
 
     observerType = 1;
     notify();   // Game statistics observer
 
-    //Not doing the negotiate order
+
     clearAllNegotiation();
     for(auto&& player: *players) {
         player->getHandOfCards()->getCardsInHand()->clear();
