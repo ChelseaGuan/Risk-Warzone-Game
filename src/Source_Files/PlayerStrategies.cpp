@@ -92,11 +92,11 @@ std::vector<Territory*> HumanPlayerStrategy::toAttack(){
 void HumanPlayerStrategy::issueOrder(){
     std::cout<<"\nHuman Player "<<this->player->getPlayerName()<<" Issuing an order...\n"<<std::endl;
     //ToDefend Territories
-    std::cout<<"\nThis is your territories: "<<std::endl;
+    std::cout<<"\nThese are your territories: "<<std::endl;
     auto defendList = toDefend();
     this->player->setPlayersTerritories(defendList);
     for(int i=0; i <= defendList.size() - 1 ; i++){
-        std::cout<<(i+1)<<".\t"<<*defendList.at(i);
+        std::cout<<(i+1)<<". "<<*defendList.at(i);
     }
 
     int terrId;
