@@ -196,6 +196,8 @@ bool GameEngine::createValidMap() {
         std::cout << *gameMap;
         return true;
     }
+    else
+        std::cout << mapFileName << " is not a domination map.\n\n";
 
     // Since gameMap->validate() evaluated to false, it is an invalid domination map. We delete the instances related to domination map loading
     // and try to read the file as a conquest map.
@@ -215,6 +217,7 @@ bool GameEngine::createValidMap() {
 
     // Since both verifications returned false, mapFileName corresponds to an invalid file.
     else {
+        std::cout << mapFileName << " is not a conquest map.\n\n";
         std::cout << "Not all three checks are respected. Therefore, " << mapFileName << " is invalid.\n\n";
         delete cfr;
         delete adapter;
@@ -345,7 +348,7 @@ void GameEngine::startupPhase(){
     this->settingStrategies();
     //to deliver
     //1)
-    std::cout<<"Each players territory: "<<std::endl;
+    std::cout<<"\nEach players' territories: "<<std::endl;
     int size;
     for(auto&& player: *players){
         std::cout<<*player<<std::endl;

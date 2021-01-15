@@ -1,4 +1,3 @@
-
 #include "MapLoader.h"
 #include <fstream>
 #include <sstream>
@@ -106,7 +105,7 @@ bool MapLoader::filterTerritoryValues(const std::string &value, std::vector<Terr
 
 /**
  * IMPORTANT NOTE: here the territoryIds start at 1, but the vector index is
- * actually continentId - 1 [A.J]
+ * actually continentId - 1
  * @param inFile
  */
 void MapLoader::loadTerritories(std::ifstream &inFile) {
@@ -166,10 +165,9 @@ Map MapLoader::loadMapFile(const std::string fileName){
     bool isFileOpened = false;
     inputFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
     try {
-        //Opening file
+        // Opening file
         inputFile.open(fileName.c_str());
         isFileOpened = true;
-        //FIXME: There is surely a better way to do it
         while (getline(inputFile, valueRead)) {
             if (valueRead.find(CONTINENT) != std::string::npos) {
                 loadContinents(inputFile);
@@ -501,7 +499,6 @@ ConquestFileReaderAdapter::~ConquestFileReaderAdapter() {
 
 // Starting method
 Map ConquestFileReaderAdapter::loadMapFile(std::string fileName) {
-    std::cout << "Reading a conquest file.\n";
     return conquestFileReader->loadConquestFile(fileName);
 }
 
