@@ -801,4 +801,6 @@ Player 0 controls 42.8571% of the world.
 ====================END OF ORDER EXECUTION PHASE ===============
 
 Player 1, do you wish to change strategy? (yes/y or no/n):
+
+// ...
 ```
