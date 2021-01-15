@@ -18,17 +18,22 @@ class GameEngine : public Subject {
 private:
     std::string mapFileName;
     Map* gameMap;
-    std::vector<Player*>* players; //FIXME: should be sorted with the correct order
-    int numPlayers; //kinda useless... you can just use the size of the players
+    std::vector<Player*>* players;
+    int numPlayers;
     Deck* deck;
     bool phaseObserver;
     bool gameStatsObserver;
-    int initialArmies;//initial army of a player
+    int initialArmies; //initial army of a player
     int reinforcementPhase();
     int issueOrdersPhase();
     void executeOrdersPhase();
     int isPlayerOwningContinent(Player& p);
     MapLoader* mapLoader;
+
+    // For the observer pattern
+    std::string playerTurn;
+    std::string phaseName;
+    bool observerType; // 0 if phase observer, 1 if game statistics
 
 public:
     // Constructors and destructor
@@ -42,6 +47,7 @@ public:
 
     void setPlayerStrategy(Player& player, int strategyId);
     void settingStrategies();
+
     // Accessors and mutators
     Map* getMap();
     std::vector<Player*>* getPlayers();
@@ -56,6 +62,10 @@ public:
     int executeOrderWithPriority(std::string orderPriority);
     bool isPlayerOwningAllContinents();
     void playersHaveMinTerritories();
+    std::string getPlayerTurn();
+    std::string getPhaseName();
+    bool getObserverType();
+
 
     void clearAllNegotiation();
 

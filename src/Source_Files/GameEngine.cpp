@@ -108,6 +108,15 @@ bool GameEngine::getGameStatsObserver() {
     return gameStatsObserver;
 }
 
+std::string GameEngine::getPlayerTurn() {
+    return playerTurn;
+}
+std::string GameEngine::getPhaseName() {
+    return phaseName;
+}
+bool GameEngine::getObserverType() {
+    return observerType;
+}
 
 
 
@@ -120,25 +129,27 @@ void GameEngine::createGame(std::string dirName) {
     // Let user choose a map from the directory
     do {
         mapFileName = chooseMap(dirName);
-    } while (!createValidMap());    // Create and validate the map chosen by user using MapLoader
+    } while (!createValidMap());    // Create and validate the map chosen by user using MapLoader.
 
-    // Let user choose the number of players
+    // Let user choose the number of players.
     this->chooseNumPlayers();
 
 
-    // Create the number of players requested by user
+    // Create the number of players requested by user.
     for (int i=0; i<numPlayers; i++) {
         (*players).push_back(new Player());
         (*players)[i]->setPlayerName(std::to_string(i));
         players->at(i)->setGameMap(*this->gameMap);
     }
-    std::cout<<"Cards in deck: "<<*this->getDeck()<<std::endl;
+
+    // Display the cards in deck.
+    std::cout<<*this->getDeck()<<std::endl;
 
     this->turnOnOffObservers();
 }
 
 
-// Returns the file name corresponding to the map the user wants
+// Returns the file name corresponding to the map the user wants.
 std::string GameEngine::chooseMap(std::string dirName) {
     DIR *dir;
     struct dirent *entry;
@@ -156,10 +167,10 @@ std::string GameEngine::chooseMap(std::string dirName) {
         }
         closedir(dir);
 
-        // Let user choose which map they would like to play on
+        // Let user choose which map they would like to play on.
         int chosenMapNum;
         while (1) {
-            std::cout << "Choose a map to play on by entering its corresponding number:";
+            std::cout << "Choose a map to play on by entering its corresponding number: ";
             if (std::cin >> chosenMapNum && chosenMapNum >= 1 && chosenMapNum <= mapNames.size())   // Validates that the map number chosen was one of the provided options
                 break;
             std::cin.clear();
@@ -185,6 +196,8 @@ bool GameEngine::createValidMap() {
         std::cout << *gameMap;
         return true;
     }
+    else
+        std::cout << mapFileName << " is not a domination map.\n\n";
 
     // Since gameMap->validate() evaluated to false, it is an invalid domination map. We delete the instances related to domination map loading
     // and try to read the file as a conquest map.
@@ -204,6 +217,7 @@ bool GameEngine::createValidMap() {
 
     // Since both verifications returned false, mapFileName corresponds to an invalid file.
     else {
+        std::cout << mapFileName << " is not a conquest map.\n\n";
         std::cout << "Not all three checks are respected. Therefore, " << mapFileName << " is invalid.\n\n";
         delete cfr;
         delete adapter;
@@ -215,7 +229,7 @@ bool GameEngine::createValidMap() {
 // Returns a number from 2 to 5 corresponding to the number of players
 void GameEngine::chooseNumPlayers() {
     while (1) {
-        std::cout << "Enter number of players (2-5):";
+        std::cout << "Enter number of players (2-5): ";
         if (std::cin >> numPlayers && numPlayers >= 2 && numPlayers <= 5)
             break;
         std::cin.clear();
@@ -229,12 +243,12 @@ void GameEngine::turnOnOffObservers() {
     std::string input;
     // While loops are to keep prompting user in case they enter an invalid input.
     while (1) {
-        std::cout << "Would you like to turn on observers? (Y/N)";
+        std::cout << "\nWould you like to turn on observers? (Y/N): ";
         std::cin >> input;
         if (input == "y" || input == "Y") {
             while (1) {
                 // Turn on/off phase observer.
-                std::cout << "Would you like to turn on phase observer? (Y/N)";
+                std::cout << "Would you like to turn on phase observer? (Y/N): ";
                 std::cin >> input;
                 if (input == "y" || input == "Y") {
                     phaseObserver = true;
@@ -252,7 +266,7 @@ void GameEngine::turnOnOffObservers() {
             }
             while (1) {
                 // Turn on/off game statistics observer.
-                std::cout << "Would you like to turn on game statistics observer? (Y/N)";
+                std::cout << "Would you like to turn on game statistics observer? (Y/N): ";
                 std::cin >> input;
                 if (input == "y" || input == "Y") {
                     gameStatsObserver = true;
@@ -301,7 +315,7 @@ void GameEngine::startupPhase(){
     // Shuffle the players list and assign it a random order.
     std::shuffle(players->begin(), players->end(), rng);
 
-    // sequence 2
+    // Sequence 2
     std::vector<Territory>* allTerr = gameMap->getAllTerritories();
     double numTerritories (allTerr->size());
     double numRounds=ceil(numTerritories/(numPlayers));
@@ -334,7 +348,7 @@ void GameEngine::startupPhase(){
     this->settingStrategies();
     //to deliver
     //1)
-    std::cout<<"Each players territory : "<<std::endl;
+    std::cout<<"\nEach players' territories: "<<std::endl;
     int size;
     for(auto&& player: *players){
         std::cout<<*player<<std::endl;
@@ -344,10 +358,10 @@ void GameEngine::startupPhase(){
         }
     }
     //2)
-    std::cout << "\nNumber of initial armies per player : " << initialArmies << std::endl;
+    std::cout << "\nNumber of initial armies per player: " << initialArmies << std::endl;
     //3)
 
-    std::cout<<"The order of play in a turn : ";
+    std::cout<<"The order of play in a turn: ";
     for (auto&& player : *players)
         std::cout << player->getPlayerName() << " || ";
 
@@ -379,18 +393,18 @@ void GameEngine::settingStrategies() {
     int strategyId;
     for(auto&& player: *players) {
         do {
-            std::cout << "list of strategies: " << std::endl;
-            std::cout << "1-HumanPlayerStrategy" << std::endl;
-            std::cout << "2-AggressivePlayerStrategy" << std::endl;
-            std::cout << "3-BenevolentPlayerStrategy" << std::endl;
-            std::cout << "4-NeutralPlayerStrategy" << std::endl;
-            std::cout << "Which strategy would you like to use for Player " << player->getPlayerName() << " ? ";
+            std::cout << "List of strategies:" << std::endl;
+            std::cout << "1. HumanPlayerStrategy" << std::endl;
+            std::cout << "2. AggressivePlayerStrategy" << std::endl;
+            std::cout << "3. BenevolentPlayerStrategy" << std::endl;
+            std::cout << "4. NeutralPlayerStrategy" << std::endl;
+            std::cout << "Which strategy would you like to use for Player " << player->getPlayerName() << "? ";
             std::cin >> strategyId;
             if(strategyId >= 1 && strategyId <= 4) {
                 setPlayerStrategy(*player, strategyId);
             }
             else{
-                std::cout<<"Invalid value, please try again"<<std::endl;
+                std::cout<<"Invalid value, please try again."<<std::endl;
             }
         }while(strategyId < 1 || strategyId > 4);
     }
@@ -424,24 +438,24 @@ void GameEngine::initNumArmies() {
 void GameEngine::updateStrategy() {
     std::string userInput;
     for (auto &&player : *players) {
-        std::cout << "\nPlayer " << player->getPlayerName() << ", do you wish to change strategy? (yes/y or no/n)";
+        std::cout << "\nPlayer " << player->getPlayerName() << ", do you wish to change strategy? (yes/y or no/n): ";
         std::cin >> userInput;
         if (userInput == "yes" || userInput == "y") {
             int value;
             do {
                 std::cout << "Your current strategy is " << *player->getPlayerStrategy() << std::endl;
-                std::cout << "list of strategies: " << std::endl;
-                std::cout << "1-HumanPlayerStrategy" << std::endl;
-                std::cout << "2-AggressivePlayerStrategy" << std::endl;
-                std::cout << "3-BenevolentPlayerStrategy" << std::endl;
-                std::cout << "4-NeutralPlayerStrategy" << std::endl;
+                std::cout << "List of strategies: " << std::endl;
+                std::cout << "1. HumanPlayerStrategy" << std::endl;
+                std::cout << "2. AggressivePlayerStrategy" << std::endl;
+                std::cout << "3. BenevolentPlayerStrategy" << std::endl;
+                std::cout << "4. NeutralPlayerStrategy" << std::endl;
                 std::cout<< "Your decision: ";
                 std::cin >> value;
                 if (value >= 1 && value <= 4) {
                     setPlayerStrategy(*player, value);
                 }
                 else{
-                    std::cout<<"Invalid value, please try again"<<std::endl;
+                    std::cout<<"Invalid value, please try again."<<std::endl;
                 }
             } while (value < 1 || value > 4);
 
@@ -451,12 +465,12 @@ void GameEngine::updateStrategy() {
 
 void GameEngine::mainGameLoop() {
     while(1){
-        if(reinforcementPhase() == 0) {
+        if (reinforcementPhase() == 0) {
             delete phaseObs;
             delete gameStatsObs;
             return;
         }
-        if(issueOrdersPhase() == 0) {
+        if (issueOrdersPhase() == 0) {
             delete phaseObs;
             delete gameStatsObs;
             return;
@@ -465,7 +479,7 @@ void GameEngine::mainGameLoop() {
         updateStrategy();
     }
 }
-//TODO: Might require debugging
+
 int GameEngine::isPlayerOwningContinent(Player& p) {
     auto copyTerrOfPlayer = p.getPlayersTerritories();
     std::sort(copyTerrOfPlayer.begin(), copyTerrOfPlayer.end());
@@ -516,17 +530,19 @@ void GameEngine::playersHaveMinTerritories() {
 
 int GameEngine::reinforcementPhase() {
     std::cout<<std::endl<<"\nReinforcement Phase...\n"<<std::endl ;
-    //Making sure no one owns all territory
+    // Makes sure no one owns all territory
     if(isPlayerOwningAllContinents()){
         return 0;
     };
-    //Checking if a player should get kicked out.
+    // Checks if a player should get kicked out.
     do {
         playersHaveMinTerritories();
     }while(isThereEmptyPlayers() != -1);
         for(auto&& player: *players) {
-            notify(player->getPlayerName(), "Reinforcement phase");
-
+            playerTurn = player->getPlayerName();
+            phaseName = "Reinforcement phase";
+            observerType = 0;
+            notify();   // Phase observer
             int armiesFromTerr = std::floor(player->playersTerritories.size()/3);
             int continentOwnedBonus = isPlayerOwningContinent(*player);
             if(armiesFromTerr > MIN_REINFORCEMENT) {
@@ -546,7 +562,10 @@ int GameEngine::issueOrdersPhase() {
             return 0;
         }
         player->getPlayerStrategy()->issueOrder();
-        notify(player->getPlayerName(), "Issue orders phase");
+        playerTurn = player->getPlayerName();
+        phaseName = "Issue orders phase";
+        observerType = 0;
+        notify();   // Phase observer
     }
     std::cout<<"================== END ISSUING ORDER PHASE =============\n\n";
     return 1;
@@ -556,8 +575,8 @@ int GameEngine::hasOrderOfPriority(Player &player, std::string orderName) {
     auto orderList = player.getPlayerOrdersList()->getListOfOrders();
     int index = 0;
     bool found = false;
-    for(auto&& order: orderList){
-        if(order->name == orderName) {
+    for (auto&& order: orderList) {
+        if (order->name == orderName) {
             found = true;
             return index;
         }
@@ -577,7 +596,10 @@ int GameEngine::executeOrderWithPriority(std::string orderPriority) {
                 std::cout<<"Player "<<player->getPlayerName()<<"  owns all the territories and won. The game ends..."<<std::endl;
                 return 0;
             }
-            notify(player->getPlayerName(), "Execution phase");     // Phase observer
+            playerTurn = player->getPlayerName();
+            phaseName = "Execution phase";
+            observerType = 0;
+            notify();   // Phase observer
 
             index = hasOrderOfPriority(*player, orderPriority);
             if(index != -1) {
@@ -602,30 +624,34 @@ void GameEngine::clearAllNegotiation() {
 
 void GameEngine::executeOrdersPhase() {
     int winner = -1;
-    //Executing deploy order first
+    // Executing deploy order first
     std::cout<<"====================ORDER EXECUTION PHASE ===============\n";
     std::cout<<"\nDeploys first priority:\n";
     winner = executeOrderWithPriority("DeployOrder");
 
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nAdvance second priority:\n";
     winner = executeOrderWithPriority("AdvanceOrder");
+    observerType = 1;
     notify();   // Game statistics observer
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nBomb third priority:\n";
     winner =  executeOrderWithPriority("BombOrder");
 
-    if(winner == 0) {return;}
+    if (winner == 0) {return;}
     std::cout<<"\nAirlift fourth priority:\n";
     winner =  executeOrderWithPriority("AirliftOrder");
+
+    observerType = 1;
     notify();   // Game statistics observer
 
-    if(winner == 0) {return;}
-//    std::cout<<"\nBlockade fifth priority:\n";
+    if (winner == 0) {return;}
     winner =  executeOrderWithPriority("BlockadeOrder");
+
+    observerType = 1;
     notify();   // Game statistics observer
 
-    //Not doing the negotiate order
+
     clearAllNegotiation();
     for(auto&& player: *players) {
         player->getHandOfCards()->getCardsInHand()->clear();

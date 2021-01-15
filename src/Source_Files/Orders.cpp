@@ -5,13 +5,13 @@
 #include "Map.h"
 #include <random>
 //====================================ORDERLIST CLASS====================================
-//Constructors
+// Constructors
 OrdersList::OrdersList() : listOfOrders{std::vector<Order*>()} {};
 // Copy constructor for Order List
 OrdersList::OrdersList(const OrdersList & oL) {
     listOfOrders = oL.listOfOrders;
 }
-//Destructor
+// Destructor
 OrdersList::~OrdersList() {
     for (auto order : listOfOrders)
     {
@@ -30,7 +30,7 @@ OrdersList &OrdersList::operator=(const OrdersList &orderList) {
     }
     return *this;
 }
-//Stream insertion operator
+// Stream insertion operator
 std::ostream &operator<<(std::ostream &output, OrdersList &oL) {
     int i = 1;
     for (auto&& order : oL.getListOfOrders()){
@@ -43,16 +43,12 @@ std::ostream &operator<<(std::ostream &output, OrdersList &oL) {
 std::vector<Order*> OrdersList::getListOfOrders()  {
     return listOfOrders;
 }
-//Method move FIXME: Incomplete
+
 void OrdersList::move(const Order& order, int new_position) {
     try{
         if (new_position <= listOfOrders.size()){
             for (int i = 1; i <= listOfOrders.size(); i++) {
-//            if (i == order.getIntType()) {
                 listOfOrders.erase(listOfOrders.begin() + i);
-//                listOfOrders->insert(listOfOrders->begin() + new_position - 1, order);
-//                break;
-//            }
             }
         }
     } catch (int new_position) {
@@ -169,7 +165,6 @@ DeployOrder::DeployOrder(Player& player, int numArmies, Territory& target) : Ord
 
 DeployOrder::DeployOrder(const DeployOrder &other) : Order(other){}
 
-//DeployOrder::~DeployOrder() = default;
 
 // Stream insertion operator
 std::ostream &operator<<(std::ostream &output, DeployOrder &o) {
@@ -229,8 +224,6 @@ void AdvanceOrder::execute() {
         }
         if(*this->origin->getNumArmies() <= this->numberOfArmiesToMove) {
             this->numberOfArmiesToMove = *this->origin->getNumArmies();
-//            this->origin->setNumArmies(0);
-//            this->destination->setNumArmies(*this->destination->getNumArmies() + *this->origin->getNumArmies());
         }
         fightSimulationMecanism();
     }

@@ -11,8 +11,10 @@ enum CardType {
     Airlift = 3,
     Diplomacy= 4
 };
+
 class Player;
 class Order;
+
 //====================================CARD CLASS====================================
 class Card {
 public:
@@ -29,8 +31,8 @@ public:
 
 
 private:
-    CardType* type; //type of card
-    std::string* typeName; //type of the card in string (for output purposes)
+    CardType* type; // Type of card
+    std::string* typeName; // Type of the card in string (for output purposes)
     Player* owner;
 };
 

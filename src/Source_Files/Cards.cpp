@@ -47,10 +47,10 @@ Card::Card(int enumValue) : type {new CardType }, typeName {new std::string("")}
 }
 
 Card::Card(int enumValue, Player& player) : type {new CardType }, typeName {new std::string("")}{
-    //Taking advantage of the fact that enum in c++ have
-    //an int equivalent. so we initialize the card with an integer
-    //within the range : 0 to 6.
-    //Why? This makes the code less hardcoded for the initializing of cards
+    // Taking advantage of the fact that enum in c++ has an int
+    // equivalent, so we initialize the card with an integer
+    // within the range : 0 to 6.
+    // Why? This makes the code less hardcoded for the initializing of cards.
     switch(enumValue) {
         case 0:
             this->typeName = new std::string("Bomb");
@@ -79,10 +79,10 @@ Card::Card(int enumValue, Player& player) : type {new CardType }, typeName {new 
 }
 
 
-//Destructor
+// Destructor
 Card::~Card() {
-    //delete type; An enum is not dynamically allocated.
-    // Thus, explicitly  calling delete on it won't work.
+    // Delete type; An enum is not dynamically allocated.
+    // Thus, explicitly calling delete on it won't work.
     delete typeName;
     type = nullptr;
     typeName = nullptr;
@@ -111,6 +111,7 @@ Card& Card::operator=(const Card &card) {
     }
     return *this;
 }
+
 //Stream insertion operator
 std::ostream& operator<<(std::ostream& output, const Card &card){
     output <<*card.typeName;
@@ -143,33 +144,34 @@ void Card::play() {
     this->owner->getPlayerOrdersList()->add(getOrderFromCard());
 }
 
+
 //==============================DECK==========================================
 Deck::Deck() : cardsList {new std::vector<Card>}{
-    //This causes the program to start generating numbers from
+    // This causes the program to start generating numbers from
     // a different point in the sequence every time it is run,
     // making it appear to be less predictable.
     srand(time(NULL));
 
-    //Filling the vector of Cards in the deck by adding
+    // Filling the vector of Cards in the deck by adding
     // Cards with all possible values for the enum (type of cards).
     for(int i=0; i < 5; i++) {
         this->cardsList->push_back(Card(i));
     }
 }
 
-//Copy constructor
+// Copy constructor
 Deck::Deck(const Deck &deck) {
     cardsList = new std::vector<Card>(*deck.cardsList);
 }
 
-//Destructor
+// Destructor
 Deck::~Deck() {
     cardsList->clear();
     delete cardsList;
     cardsList = nullptr;
 }
 
-//Assignment operator
+// Assignment operator
 Deck& Deck::operator=(const Deck &deck) {
     if(this != &deck) {
         delete cardsList;
@@ -179,7 +181,7 @@ Deck& Deck::operator=(const Deck &deck) {
     return *this;
 }
 
-//Draw method
+// Draw method
 Card Deck::draw() {
     int randomCardNumber = rand() % this->cardsList->size();
     Card cardDrawn =  this->cardsList->at(randomCardNumber);
@@ -190,7 +192,7 @@ Card Deck::draw() {
     return cardDrawn;
 }
 
-//Stream insertion operator
+// Stream insertion operator
 std::ostream& operator<<(std::ostream& output, const Deck &deck){
     output<<"The deck of cards has: ";
     for (auto&& element : *deck.cardsList) {
@@ -199,41 +201,34 @@ std::ostream& operator<<(std::ostream& output, const Deck &deck){
     return output;
 }
 
+
 //==============================HAND==========================================
-//Constructors
+// Constructors
 Hand::Hand() : cardsInHand {new std::vector<Card>()}{
 }
 
-//Hand::Hand(Player* player) {
-//    owner = player;
-//}
-
-//Copy constructor
+// Copy constructor
 Hand::Hand(const Hand &hand) {
     cardsInHand = new std::vector<Card>(*hand.cardsInHand);
 }
 
-//Destructor
+// Destructor
 Hand::~Hand() {
     cardsInHand->clear();
     delete cardsInHand;
     cardsInHand = nullptr;
-    //FIXME: nebuleux tout ca....
-//    if(owner != nullptr) {
-//        delete owner;
-//    }
 }
 
 void Hand::add(Card card) {
     this->cardsInHand->push_back(card);
 }
 
-//Getter
+// Accessor method
 std::vector<Card> *Hand::getCardsInHand() {
     return cardsInHand;
 }
 
-//Assignment operator
+// Assignment operator
 Hand& Hand::operator=(const Hand &hand) {
     if(this != &hand){
         delete cardsInHand;
@@ -243,7 +238,7 @@ Hand& Hand::operator=(const Hand &hand) {
     return *this;
 }
 
-//Stream insertion operator
+// Stream insertion operator
 std::ostream& operator<<(std::ostream& output, const Hand &hand){
     for(auto&& card: *hand.cardsInHand){
         output << card << "\t|\t";
