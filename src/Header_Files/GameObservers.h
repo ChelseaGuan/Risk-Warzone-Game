@@ -12,7 +12,6 @@ class Observer {
 public:
     ~Observer();
     virtual void update() = 0;
-    virtual void update(std::string playerName, std::string phaseName) = 0;
 protected:
     Observer();
 };
@@ -26,7 +25,6 @@ public:
     virtual void attach(Observer* o);
     virtual void detach(Observer* o);
     virtual void notify();
-    virtual void notify(std::string playerName, std::string phaseName);
 private:
     std::list<Observer*>* _observers;
 };
@@ -39,7 +37,6 @@ public:
     PhaseObserver(GameEngine* s);
     ~PhaseObserver();
     void update();
-    void update(std::string playerName, std::string phaseName);
     void display(std::string playerName, std::string phaseName);
 private:
     GameEngine* _subject;
@@ -52,7 +49,6 @@ public:
     GameStatsObserver(GameEngine* s);
     ~GameStatsObserver();
     void update();
-    void update(std::string playerName, std::string phaseName);
     void display();
 private:
     GameEngine* _subject;

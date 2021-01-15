@@ -17,26 +17,26 @@ private:
     OrdersList* playerOrdersList;
     int reinforcementPool;
     Map* gameMap;
-    //strategy pattern-------------------------------------------------
+    // Strategy pattern-------------------------------------------------
     PlayerStrategy *playerStrategy;
     std::vector<Player*> negotiatePlayers;
 public:
-    //Default constructors
+    // Default constructors
     Player();
-    //Constructor
+    // Constructor
     Player(std::string id);
-    //copy constructor
+    // Copy constructor
     Player(const Player &player);
-    //destructor
+    // Destructor
     ~Player();
-    //assignment operator
+    // Assignment operator
     Player& operator=(const Player &player);
     void setGameMap(Map& map);
-    //Part 4 methods
-    std::vector<Territory*> toDefend(); //returns list of territories to be defended (arbitrary list)
-    std::vector<Territory*> toAttack(); //returns list of territories to be attacked (arbitrary list)
+
+    std::vector<Territory*> toDefend(); // Returns list of territories to be defended (arbitrary list)
+    std::vector<Territory*> toAttack(); // Returns list of territories to be attacked (arbitrary list)
     bool isAdjacentTerritory(int adjTerrId);
-    void issueOrder(); //creates an Order object and puts it in the player’s list of orders
+    void issueOrder(); // Creates an Order object and puts it in the player’s list of orders
 
     void setPlayersTerritories(std::vector<Territory*> territories);
     void setAttackingTerritories(std::vector<Territory*> territories);

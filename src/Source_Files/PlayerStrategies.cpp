@@ -85,18 +85,18 @@ std::vector<Territory*> HumanPlayerStrategy::toAttack(){
             territoriesThatCanBeAttacked.push_back(&terr);
         }
     }
-//    attackingTerritories = territoriesThatCanBeAttacked;
     return territoriesThatCanBeAttacked;
 }
 
+// 1. Human player that requires user interaction to make decisions
 void HumanPlayerStrategy::issueOrder(){
     std::cout<<"\nHuman Player "<<this->player->getPlayerName()<<" Issuing an order...\n"<<std::endl;
-    //ToDefend Territories
-    std::cout<<"\nThis is your territories: "<<std::endl;
+    // toDefend Territories
+    std::cout<<"\nThese are your territories: "<<std::endl;
     auto defendList = toDefend();
     this->player->setPlayersTerritories(defendList);
     for(int i=0; i <= defendList.size() - 1 ; i++){
-        std::cout<<(i+1)<<".\t"<<*defendList.at(i);
+        std::cout<<(i+1)<<". "<<*defendList.at(i);
     }
 
     int terrId;
@@ -104,7 +104,7 @@ void HumanPlayerStrategy::issueOrder(){
     int mockedReinforcementPool = this->player->getReinforcementPool();
     do {
         std::cout<<"Human Player "<<this->player->getPlayerName()<< " has "<<mockedReinforcementPool<<" armies in their reinforcement pool"<<std::endl;
-        std::cout<<"Which territory you wish to deploy armies to? ";
+        std::cout<<"\nWhich territory you wish to deploy armies to? ";
         std::cin >> terrId;
         std::cout<<"\nHow many armies you wish to deploy? ";
         std::cin >> numArmies;
@@ -113,35 +113,34 @@ void HumanPlayerStrategy::issueOrder(){
         if(mockedReinforcementPool == 0) {
             break;
         }
-    }while(this->player->getReinforcementPool() > 0);
+    } while(this->player->getReinforcementPool() > 0);
     std::cout<<"\nNote. The territories will be updated during the order execution phase. "<<std::endl;
 
-    //Attacking Territories
-    std::cout<<"This is the territories you can attack: "<<std::endl;
+    // Attacking Territories
+    std::cout<<"These are the territories you can attack: "<<std::endl;
     auto attackList = toAttack();
     this->player->setAttackingTerritories(attackList);
     for(int i=0; i <= attackList.size() - 1 ; i++){
-        std::cout<<(i+1)<<".\t"<<*attackList.at(i);
+        std::cout<<(i+1)<<". "<<*attackList.at(i);
     }
 
     int sourceTerrId;
     std::string wantsToAttackStr;
     do {
-        std::cout<<"Do you wish to attack a territory ? (yes/y or no/n):"<<std::endl;
+        std::cout<<std::endl<<"Do you wish to attack a territory ? (yes/y or no/n):"<<std::endl;
         std::cin>>wantsToAttackStr;
         if(wantsToAttackStr == "no" || wantsToAttackStr == "n"){
             break;
         }
-        std::cout<<"From which of your territories you wish to attack with? ";
+        std::cout<<"From which of your territories do you wish to attack with? ";
         std::cin >> sourceTerrId;
-        //ToDo si on veut at the end: exception handling (when select # > # player territories)
-        std::cout<<"\nWhich enemy territory you wish to attack? ";
+        std::cout<<"\nWhich enemy territory do you wish to attack? ";
         std::cin >> terrId;
-        std::cout<<"\nHow many armies you wish to send to this territory? ";
+        std::cout<<"\nHow many armies do you wish to send to this territory? ";
         std::cin >> numArmies;
         mockedReinforcementPool -= numArmies;
         this->player->getPlayerOrdersList()->add(new AdvanceOrder(*this->player, numArmies, *defendList.at(sourceTerrId-1), *attackList.at(terrId - 1)));
-    }while(1);
+    } while(1);
     std::cout<<"\nNote. The territories will be updated during the order execution phase. "<<std::endl;
 
 
@@ -157,10 +156,10 @@ void HumanPlayerStrategy::issueOrder(){
         if (wantsToAttackStr == "no" || wantsToAttackStr == "n") {
             break;
         }
-        //Cards in hands
-        std::cout<<"This is the cards in your hands: "<<std::endl;
+        // Cards in hands
+        std::cout<<"These are the cards in your hands: "<<std::endl;
         for(int i=0; i < cardsList.size() - 1 ; i++){
-            std::cout<<(i+1)<<".\t"<<cardsList.at(i)<<std::endl;
+            std::cout<<(i+1)<<". "<<cardsList.at(i)<<std::endl;
         }
         std::cout<<"Which card do you wish to play?"<<std::endl;
         std::cin>>cardId;
@@ -175,9 +174,9 @@ void HumanPlayerStrategy::issueOrder(){
 
 
 
-//2-AggressivePlayerStrategy - an aggressive computer player that focuses
-//on attack (reinforces its strongest country, then always attack with it until it cannot attack anymore, then fortifies in
-//order to maximize aggregation of forces in one country)
+// 2. Aggressive computer player that focuses on attack (reinforces its strongest country, then always
+// attacks with it until it cannot attack anymore, then fortifies in order to maximize aggregation
+// of forces in one country)
 AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {}
 
 AggressivePlayerStrategy::AggressivePlayerStrategy(Map& game, Player& player) : PlayerStrategy(game, player, "Aggressive Player Strategy") {}
@@ -191,13 +190,7 @@ AggressivePlayerStrategy & AggressivePlayerStrategy::operator=(const AggressiveP
     return *this;
 }
 
-//std::ostream &operator<<(std::ostream &output, const AggressivePlayerStrategy &otherPlayer) {return output;}
-
-//bool compareTerritoriesByHighest (Territory* t1, Territory* t2) {
-//    return t1->getNumArmies() > t2->getNumArmies();
-//}
-
-// sort using a custom function object
+// Sorts using a custom function object
 struct {
     bool operator()(Territory* t1, Territory* t2) const
     {
@@ -206,14 +199,14 @@ struct {
 } compareTerritoriesByHighest;
 
 std::vector<Territory*> AggressivePlayerStrategy::toDefend(){
-    //return players territories sorted by highest number of armies.
+    // Returns players territories sorted by highest number of armies.
     std::vector<Territory*> territoriesThatCanBeDefended;
     for(auto&& terr: *this->game->getAllTerritories()){
         if(terr.getOwner() == this->player) {
-                territoriesThatCanBeDefended.push_back(&terr);
+            territoriesThatCanBeDefended.push_back(&terr);
         }
     }
-    //sorting list by highest num of armies
+    // Sorts list by highest num of armies
     std::sort(territoriesThatCanBeDefended.begin(), territoriesThatCanBeDefended.end(), compareTerritoriesByHighest);
 
     return territoriesThatCanBeDefended;
@@ -247,38 +240,33 @@ void AggressivePlayerStrategy::issueOrder(){
     auto defendList = toDefend();
     this->player->setPlayersTerritories(defendList);
 
-    std::cout<<"This is your territories: "<<std::endl;
+    std::cout<<"These are your territories: "<<std::endl;
     for(int i=0; i <= defendList.size() - 1 ; i++){
-        std::cout<<(i+1)<<".\t"<<*defendList.at(i);
+        std::cout<<(i+1)<<". "<<*defendList.at(i);
     }
 
 
 
     int mockedReinforcementPool = this->player->getReinforcementPool();
-    //Deploying to strongest territory
+    // Deploying to strongest territory
     std::cout<<"Aggressive Player "<<this->player->getPlayerName()<< " has "<<mockedReinforcementPool<<" armies in their reinforcement pool"<<std::endl;
     this->player->getPlayerOrdersList()->add(new DeployOrder(*this->player, mockedReinforcementPool, *defendList.at(0)));
 
 
     if(!reinforceStrongest()){
-        //Attacking to first territory in Attacking list
+        // Attacking to first territory in Attacking list
         auto attackList = toAttack();
         this->player->setAttackingTerritories(attackList);
-            this->player->getPlayerOrdersList()->add(new AdvanceOrder(*this->player, *defendList.at(0)->getNumArmies(), *defendList.at(0), *attackList.at(0)));
+        this->player->getPlayerOrdersList()->add(new AdvanceOrder(*this->player, *defendList.at(0)->getNumArmies(), *defendList.at(0), *attackList.at(0)));
     };
 
-
-
-//    this->player->getPlayerOrdersList()->add(new AdvanceOrder(*this->player, *defendList.at(0)->getNumArmies(), *defendList.at(0), *attackList.at(0)));
 
     std::cout<<"This is the end of your issue order phase of aggressive player. "<<std::endl;
 }
 
 
-
-//3-BenevolentPlayerStrategy - benevolent computer player that focuses on
-//protecting its weak countries (reinforces its weakest countries, never attacks, then fortifies in order to move
-//armies to weaker countries),
+// 3. Benevolent computer player that focuses on protecting its weak countries (reinforces its
+// weakest countries, never attacks, then fortifies in order to move armies to weaker countries)
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(): PlayerStrategy() {}
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Map& game, Player& player): PlayerStrategy(game, player, "Benevolent Player Strategy") {}
@@ -292,11 +280,7 @@ BenevolentPlayerStrategy & BenevolentPlayerStrategy::operator=(const BenevolentP
     return *this;
 }
 
-//std::ostream &operator<<(std::ostream &output, const BenevolentPlayerStrategy &otherPlayer) {
-//    return output;
-//}
-
-// sort using a custom function object
+// Sorts using a custom function object
 struct {
     bool operator()(Territory* t1, Territory* t2) const
     {
@@ -304,15 +288,14 @@ struct {
     }
 } compareTerritoriesByLowest;
 
-std::vector<Territory*> BenevolentPlayerStrategy::toDefend(){
-    //return players territories sorted by highest number of armies.
+std::vector<Territory*> BenevolentPlayerStrategy::toDefend() {
     std::vector<Territory*> territoriesThatCanBeDefended;
     for(auto&& terr: *this->game->getAllTerritories()){
         if(terr.getOwner() == this->player) {
             territoriesThatCanBeDefended.push_back(&terr);
         }
     }
-    //sorting list by lowest num of armies
+    // Sorts list by lowest num of armies
     std::sort(territoriesThatCanBeDefended.begin(), territoriesThatCanBeDefended.end(), compareTerritoriesByLowest);
 
     return territoriesThatCanBeDefended;
@@ -325,33 +308,34 @@ std::vector<Territory*> BenevolentPlayerStrategy::toAttack(){
 void BenevolentPlayerStrategy::reinforceWeakest() {
     bool allEqual = true;
     auto defendList = this->player->getAttackingTerritories();
-    for(int i = 0; i < defendList.size() - 1; i++) {
-        if(*defendList.at(i)->getNumArmies() != *defendList.at(i+1)->getNumArmies()) {
-            allEqual = false;
-            break;
+    for(int i = 0; i < defendList.size()-1; i++) {
+        for(int j = i+1; j < defendList.size(); j++) {
+            if (*defendList.at(i)->getNumArmies() != *defendList.at(j)->getNumArmies()) {
+                allEqual = false;
+                break;
+            }
         }
     }
-    //Then we must have a minimum, move it 1 army from the strongest to the weakest.
+    // Then we must have a minimum, move one army from the strongest to the weakest.
     if(!allEqual) {
         this->player->getPlayerOrdersList()->add(new AdvanceOrder(*this->player, 1, *defendList.at(defendList.size() -1), *defendList.at(defendList.size() -1)));
     }
-
 }
 
-void BenevolentPlayerStrategy::issueOrder(){
+void BenevolentPlayerStrategy::issueOrder() {
     std::cout<<"\nBenevolent Player "<<this->player->getPlayerName()<<" Issuing an order...\n"<<std::endl;
 
-    //ToDefend Territories
+    // toDefend Territories
     auto defendList = toDefend();
     this->player->setPlayersTerritories(defendList);
 
-    std::cout<<"This is your territories: "<<std::endl;
+    std::cout<<"These are your territories: "<<std::endl;
     for(int i=0; i <= defendList.size() - 1 ; i++){
-        std::cout<<(i+1)<<".\t"<<*defendList.at(i);
+        std::cout<<(i+1)<<". "<<*defendList.at(i);
     }
 
     int mockedReinforcementPool = this->player->getReinforcementPool();
-    //Deploying to strongest territory
+    // Deploying to weakest territory
     std::cout<<"Benevolent Player "<<this->player->getPlayerName()<< " has "<<mockedReinforcementPool<<" armies in their reinforcement pool"<<std::endl;
     this->player->getPlayerOrdersList()->add(new DeployOrder(*this->player, mockedReinforcementPool, *defendList.at(0)));
 
@@ -359,7 +343,7 @@ void BenevolentPlayerStrategy::issueOrder(){
 }
 
 
-//4-NeutralPlayerStrategy - neutral player that never issues any order
+// 4. Neutral player that never issues any order
 NeutralPlayerStrategy::NeutralPlayerStrategy():PlayerStrategy() {}
 
 NeutralPlayerStrategy::NeutralPlayerStrategy(Map& game, Player& player):PlayerStrategy(game, player, "Neutral Player Strategy") {}

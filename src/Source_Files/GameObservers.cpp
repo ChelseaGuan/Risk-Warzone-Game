@@ -32,13 +32,6 @@ void Subject::notify(){
         (*i)->update();
 }
 
-void Subject::notify(std::string playerName, std::string phaseName){
-    std::list<Observer *>::iterator i = _observers->begin();
-    for (; i != _observers->end(); ++i)
-        (*i)->update(playerName, phaseName);
-}
-
-
 
 
 
@@ -58,13 +51,16 @@ PhaseObserver::~PhaseObserver() {
     _subject->detach(this);
 }
 
-void PhaseObserver::update() {
-}
 
 // Called by notify() when the phase changes
-void PhaseObserver::update(std::string playerName, std::string phaseName) {
-    display(playerName, phaseName);
+void PhaseObserver::update() {
+    // If the observer needed is the phase observer, call the display method for it,
+    // else skip for this iteration
+    if (this->_subject->getObserverType() == 0)
+        display(this->_subject->getPlayerTurn(), this->_subject->getPhaseName());
 }
+
+
 
 // Displays player's phase.
 void PhaseObserver::display(std::string playerName, std::string phaseName) {
@@ -116,11 +112,12 @@ GameStatsObserver::~GameStatsObserver() {
 
 // Called by notify() when the state of the map changes
 void GameStatsObserver::update() {
-    display();
+    // If the observer needed is the game statistics observer, call the display method for it,
+    // else skip for this iteration
+    if (this->_subject->getObserverType() == 1)
+        display();
 }
 
-void GameStatsObserver::update(std::string playerName, std::string phaseName) {
-}
 
 // Displays players world domination view.
 void GameStatsObserver::display() {

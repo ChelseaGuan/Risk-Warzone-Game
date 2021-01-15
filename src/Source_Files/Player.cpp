@@ -1,29 +1,23 @@
-
 #include "Player.h"
 #include <random>
 #include <algorithm>
-//Default constructor
+
+// Default constructor
 Player::Player(){
     playerName = new std::string("");
-//    playersTerritories= new std::vector<Territory*>;
     handOfCards= new Hand();
     playerOrdersList= new OrdersList();
-//    attackingTerritories = new std::vector<Territory*>;
     reinforcementPool = 0;
     gameMap = nullptr;
-    //strategy pattern-------------------------------------------------??
     playerStrategy = nullptr;
 }
-//Constructor
+// Constructor
 Player::Player(std::string id) {
     playerName = new std::string(id);
-//    playersTerritories= new std::vector<Territory*>;
     handOfCards= new Hand();
     playerOrdersList= new OrdersList();
-//    attackingTerritories = new std::vector<Territory*>;
     reinforcementPool = 0;
     gameMap = nullptr;
-    //strategy pattern-------------------------------------------------??
     playerStrategy = nullptr;
 }
 //Copy constructor
@@ -43,20 +37,13 @@ Player::Player(const Player &player) {
     delete playerName;
     delete handOfCards;
     delete playerOrdersList;
-//    for(auto&& element: playersTerritories){delete element;}
     playersTerritories.clear();
-//    delete playersTerritories;
-//    playersTerritories = nullptr;
-//    for(auto&& element: attackingTerritories){delete element;}
     attackingTerritories.clear();
-//    delete attackingTerritories;
-//    attackingTerritories = nullptr;
-    gameMap = nullptr; //Pointer is set to a null-pointer since Player object is deleted after and outside of Player.
-    //strategy pattern-------------------------------------------------??
+    gameMap = nullptr; // Pointer is set to a nullpointer since Player object is deleted after and outside of Player.
     delete playerStrategy;
 }
-// assignment operator
-Player& Player::operator=(const Player &player) { //delete or null???
+// Assignment operator
+Player& Player::operator=(const Player &player) {
     if(&player != this) {
         delete playerName;
         playerName = nullptr;
@@ -67,11 +54,7 @@ Player& Player::operator=(const Player &player) { //delete or null???
         delete playerOrdersList;
         playerOrdersList = nullptr;
         playerOrdersList = new OrdersList(*player.playerOrdersList);
-//        delete playersTerritories;
-//        playersTerritories = nullptr;
         playersTerritories = player.playersTerritories;
-//        delete attackingTerritories;
-//        attackingTerritories = nullptr;
         attackingTerritories = player.attackingTerritories;
         gameMap = player.gameMap;
         //strategy pattern-------------------------------------------------
@@ -134,9 +117,8 @@ bool Player::isAdjacentTerritory(int adjTerrId){
     return false;
 }
 
-//TODO: Need to delete the playersTerr and attackingTerr (memory leaks)
 std::vector<Territory*> Player::toDefend(){
-    //return players territories sorted by least number of armies.
+    // Returns players territories sorted by least number of armies.
     std::vector<Territory*> territoriesThatCanBeDefended;
     for(auto&& terr: *this->gameMap->getAllTerritories()){
         if(terr.getOwner() == this){
@@ -147,8 +129,8 @@ std::vector<Territory*> Player::toDefend(){
     playersTerritories = territoriesThatCanBeDefended;
     return territoriesThatCanBeDefended;
 }
-//returns the list of territory the player do not own, sorted by adjacent territory to non adjacent ones.
-std::vector<Territory*> Player::toAttack(){//same as defending
+// Returns the list of territory the player do not own, sorted by adjacent territory to non adjacent ones.
+std::vector<Territory*> Player::toAttack(){ // Same as defending
     std::vector<Territory*> territoriesThatCanBeAttacked;
     for(auto&& terr: *this->gameMap->getAllTerritories()){
         if(terr.getOwner() != this) {
@@ -163,15 +145,13 @@ std::vector<Territory*> Player::toAttack(){//same as defending
     attackingTerritories = territoriesThatCanBeAttacked;
     return territoriesThatCanBeAttacked;
 }
-//creating orders and adding them to players list of orders
-//Hardcoded decision making.
+// Creates orders and adds them to players list of orders.
 void Player::issueOrder(){
-    //First bullet point!
+
     auto defending = toDefend();
     auto attacking = toAttack();
 
-
-    //Second bullet point --> Issuing orders
+    // Issues orders.
     int reinforcementPoolMockedValue = this->reinforcementPool;
     int index = 0;
     int defendingListSize =  defending.size();
@@ -182,20 +162,18 @@ void Player::issueOrder(){
         }
         else {
             this->playerOrdersList->add(new DeployOrder(*this, 3, *defending.at(index)));
-            reinforcementPoolMockedValue -=3; //MIN_REINFORCEMENT
+            reinforcementPoolMockedValue -=3; // MIN_REINFORCEMENT
             index++;
         }
     }
-    //Will allow each player to add up to 6 non deployment order. 3 AdvanceOrders and 3 others
-    //Randomize the advance order... FIXME: This might need to be debugged after part 4 will be completed. AND THAT IS WHAT INDEED HAPPENNED!
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // Will allow each player to add up to 6 non deployment order. 3 AdvanceOrders and 3 others.
+    // Randomize the advance order.
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine.
+    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd().
     std::uniform_int_distribution<> dis(0, 1);
     std::uniform_int_distribution<> randomDefValue(0, defendingListSize -1);
     std::uniform_int_distribution<> randomAttValue(0, attackingListSize -1);
-//    std::vector<int> randomDefendIds(defendingListSize);
-//    std::vector<int> randomAttackIds(attackingListSize);
-//    randomizeTerritories(randomDefendIds, randomAttackIds);
+
     int randomValue;
     for(int i =0; i < defendingListSize; i++) {
         randomValue = dis(gen);
@@ -207,7 +185,7 @@ void Player::issueOrder(){
         }
     }
 
-    //Hard coded way to play cards... True implementation should reside in the card class.
+    // Hard coded way to play cards... True implementation should reside in the card class.
     this->handOfCards->cardsInHand->push_back(Card(0, *this));
     this->handOfCards->cardsInHand->push_back(Card(0, *this));
     this->handOfCards->cardsInHand->push_back(Card(0, *this));

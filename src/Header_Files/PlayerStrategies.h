@@ -21,6 +21,7 @@ public:
     virtual void issueOrder()=0;
 };
 
+// 1. Human player that requires user interaction to make decisions
 class HumanPlayerStrategy: public PlayerStrategy{
 public:
     HumanPlayerStrategy();
@@ -28,12 +29,13 @@ public:
     ~HumanPlayerStrategy();
     HumanPlayerStrategy(const HumanPlayerStrategy &otherStrategy);
     HumanPlayerStrategy& operator=(const HumanPlayerStrategy &otherPlayer);
-//    friend std::ostream& operator<<(std::ostream& output, const HumanPlayerStrategy &otherPlayer);
     std::vector<Territory*> toDefend();
     std::vector<Territory*> toAttack();
     void issueOrder();
 };
 
+
+// 2. Aggressive computer player that focuses on attack
 class AggressivePlayerStrategy: public PlayerStrategy{
 public:
     AggressivePlayerStrategy();
@@ -42,12 +44,12 @@ public:
     AggressivePlayerStrategy(const AggressivePlayerStrategy &otherStrategy);
     AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy &otherPlayer);
     bool reinforceStrongest();
-//    friend std::ostream& operator<<(std::ostream& output, const AggressivePlayerStrategy &otherPlayer);
     std::vector<Territory*> toDefend();
     std::vector<Territory*> toAttack();
     void issueOrder();
 };
 
+// 3. Benevolent computer player that focuses on protecting its weak countries
 class BenevolentPlayerStrategy: public PlayerStrategy{
 public:
     BenevolentPlayerStrategy();
@@ -56,12 +58,13 @@ public:
     BenevolentPlayerStrategy(const BenevolentPlayerStrategy &otherStrategy);
     BenevolentPlayerStrategy& operator=(const BenevolentPlayerStrategy &otherPlayer);
     void reinforceWeakest();
-//    friend std::ostream& operator<<(std::ostream& output, const BenevolentPlayerStrategy &otherPlayer);
     std::vector<Territory*> toDefend();
     std::vector<Territory*> toAttack();
     void issueOrder();
 };
 
+
+// 4. Neutral player that never issues any order
 class NeutralPlayerStrategy: public PlayerStrategy{
 public:
     NeutralPlayerStrategy();
@@ -69,7 +72,6 @@ public:
     ~NeutralPlayerStrategy();
     NeutralPlayerStrategy(const NeutralPlayerStrategy &otherStrategy);
     NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy &otherPlayer);
-//    friend std::ostream& operator<<(std::ostream& output, const NeutralPlayerStrategy &otherPlayer);
     std::vector<Territory*> toDefend();
     std::vector<Territory*> toAttack();
     void issueOrder();
