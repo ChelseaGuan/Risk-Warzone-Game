@@ -43,7 +43,7 @@ This project was developed in the CLion IDE from JetBrains.
 * Utilizes the observer pattern to display game statistics (which player owns what percentage of the world) and phases (which player's turn it is to).  
   
   
-### Sample output
+## Sample output  
 
 ```
 WARZONE GAME START
