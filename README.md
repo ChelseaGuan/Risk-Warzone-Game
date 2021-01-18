@@ -1,13 +1,48 @@
 # Risk-Warzone-Game
 
-Worked collaboratively in a team of four developers via Github to develop a C++ program compatible with the rules of the “Warzone” version of Risk, accessible at warzone.com.
-Implemented the map feature of the game, where the map is a connected graph of continents and continents are connected subgraphs of territories.
-Provided validation methods using depth first search to check if a map is of the desired format.
-Designed a MapLoader class with exception handling that processes any .map file.
-Implemented the user interaction mechanism to start a game.
-Implemented the observer, strategy and adapter design patterns.
+## About the Project
+Worked collaboratively in a team of four developers via Github to develop a C++ program compatible with the rules of the “Warzone” version of Risk, accessible at https://www.warzone.com/.
+The objective of the game is to conquer all territories on the map.
 
+### Development
+This project was developed in the CLion IDE from JetBrains.
 
+### Features
+
+#### Map
+* The world map is a connected graph of continents and continents are connected subgraphs of territories. Each node represents a territory and each edge represents adjacency between territories.  
+* Validation methods are provided to check if a map is of the desired format using depth first search. A valid map is a connected graph, where the continents are connected subgraphs and each country belongs to one and only one continent. 
+  
+#### Map loader
+* The map loader processes any .map file, rejecting the invalid ones, but creating a corresponding map object for the valid ones. 
+* Utilizes the adapter pattern to accept any Domination or Conquest .map file found at http://domination.sourceforge.net/getmaps.shtml or http://www.windowsgames.co.uk/conquest.html.
+
+#### Players
+* Two to five users can play by placing armies on territories they own, from which they can attack adjacent territories to conquer them. 
+* Utilizes the strategy pattern to implement different kinds of players that make different decisions during the issuing orders phase. 
+* The kinds of players are  :
+  * Human player that requires user interaction to make decisions.
+  * Aggressive computer player that focuses on attack.
+  * Benevolent computer player that focuses on protecting its weak countries.
+  * Neutral player that never issues any order.
+    
+#### Orders
+* The orders a user can play are :
+  * Deployment orders
+  * Advance orders
+  * Special orders resulting from using cards:
+    * Deploy: Place armies on one of the current player’s territories.
+    * Advance: Move armies from one of the current player’s territories (source) to an adjacent territory (target). If the target territory belongs to the current player, the armies are moved to the target territory. If the target territory belongs to another player, an attack happens between the two territories.
+    * Bomb: Destroy half of the armies located on an opponent’s territory that is adjacent to one of the current player’s territories.
+    * Blockade: Triple the number of armies on one of the current player’s territories and make it a neutral territory.
+    * Airlift: Advance armies from one of the current player’s territories to any another territory.
+    * Negotiate: Prevent attacks between the current player and another player until the end of the turn. 
+    
+#### Game Engine
+* Includes the game startup phase and the main game loop.
+* Utilizes the observer pattern to display game statistics (which player owns what percentage of the world) and phases (which player's turn it is to).  
+  
+  
 ### Sample output
 
 ```
