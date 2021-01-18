@@ -1,5 +1,31 @@
 # Risk-Warzone-Game
 
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ul>
+    <li>
+      <a href="#about-the-project">About the Project</a>
+      <ol>
+        <li><a href="development">Development</a></li>
+        <li>
+          <a href="#features">Features</a>
+          <ul>
+            <li><a href="#map">Map</a></li>
+            <li><a href="#map-loader">Map Loader</a></li>
+            <li><a href="#players">Players</a></li>
+            <li><a href="#orders">Orders</a></li>
+            <li><a href="#game-engine">Game Engine</a></li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <a href="#sample-output">Sample Output</a>
+    </li>
+  </ul>
+</details>  
+  
+  
 ## About the Project
 Worked collaboratively in a team of four developers via Github to develop a C++ program compatible with the rules of the “Warzone” version of Risk, accessible at https://www.warzone.com/.
 The objective of the game is to conquer all territories on the map.
