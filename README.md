@@ -27,11 +27,11 @@
   
   
 ## About the Project
-Worked collaboratively in a team of four developers via Github to develop a C++ program compatible with the rules of the “Warzone” version of Risk, accessible at https://www.warzone.com/.
+Worked collaboratively in a team of four developers via Github to develop a computer program compatible with the rules of the “Warzone” version of Risk, accessible at https://www.warzone.com/.
 The objective of the game is to conquer all territories on the map.
 
 ### Development
-This project was developed in the CLion IDE from JetBrains.
+This project was developed in the CLion IDE from JetBrains. The language used is C++.
 
 ### Features
 
