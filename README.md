@@ -6,7 +6,7 @@
     <li>
       <a href="#about-the-project">About the Project</a>
       <ol>
-        <li><a href="development">Development</a></li>
+        <li><a href="#development">Development</a></li>
         <li>
           <a href="#features">Features</a>
           <ul>
