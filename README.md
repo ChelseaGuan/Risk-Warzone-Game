@@ -41,7 +41,7 @@ This project was developed in the CLion IDE from JetBrains. The language used is
   
 #### Map loader
 * The map loader processes any .map file, rejecting the invalid ones, but creating a corresponding map object for the valid ones. 
-* Utilizes the adapter pattern to accept any Domination or Conquest .map file found at http://domination.sourceforge.net/getmaps.shtml or http://www.windowsgames.co.uk/conquest.html.
+* Utilizes the adapter pattern to accept any Domination or Conquest .map file found at http://domination.sourceforge.net/getmaps.shtml or http://www.windowsgames.co.uk/conquest_maps.html.
 
 #### Players
 * Two to five users can play by placing armies on territories they own, from which they can attack adjacent territories to conquer them. 
